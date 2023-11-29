@@ -1,0 +1,111 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+typedef struct {
+    char Title[12];
+    char Authors[12];
+    char Press[12];
+    int Page;
+    int Price;
+} Books;
+
+int main()
+{
+    Books book[5] = { {"Truth","John","Century",300,20000},
+                      {"Love","Paul","Goods",200,15000},
+                      {"Joy","James","Cookie",250,18000},
+                      {"Thanks","Mark","Saejong",240,21000},
+                      {"God","Johnson","Jungjo",450,35000} };
+    
+    char menu[20], title[20], borrow[5][20] = { "available","available","available","available","available" };
+    int i;
+
+    do {
+        printf("[도서목록] [검색] [대출] [반납] [종료] : ");
+        scanf("%s", menu);
+
+        if (strcmp(menu, "도서목록") == 0) {
+            printf("\nTitle\tAuthors\tPress\tPage\tprice\n");
+            printf("-----\t-------\t-----\t----\t-----\n");
+            for (i = 0; i < 5; i++) {
+                printf("%s\t%s\t%s\t%d\t%d\n",
+                    book[i].Title, book[i].Authors, book[i].Press, book[i].Page, book[i].Price);
+            }
+        }
+
+        else if (strcmp(menu, "검색") == 0) {
+            printf("\n검색할 도서를 선택하세요 : ");
+            scanf("%s", title);
+
+            for (i = 0; title[i] != '\0'; i++) {
+                if (i == 0) {
+                    if (islower(title[i])) title[i] = title[i] - 32;
+                }
+                else if (isupper(title[i])) title[i] = title[i] + 32;
+            }
+
+            for (i = 0; i < 5; i++) {
+                if (strcmp(title, book[i].Title) == 0) {
+                    printf("\nTitle\tAuthors\tPress\tPage\tprice\tborrow\n");
+                    printf("-----\t-------\t-----\t----\t-----\t------\n");
+                    printf("%s\t%s\t%s\t%d\t%d\t%s\n",
+                        book[i].Title, book[i].Authors, book[i].Press, book[i].Page, book[i].Price, borrow[i]);
+                    break;
+                }
+            }
+            if (i == 5) printf("\n책을 보유하고 있지 않습니다.\n");
+        }
+
+        else if (strcmp(menu, "대출") == 0) {
+            printf("\n대출할 책의 이름을 선택하세요 : ");
+            scanf("%s", title);
+
+            for (i = 0; title[i] != '\0'; i++) {
+                if (i == 0) {
+                    if (islower(title[i])) title[i] = title[i] - 32;
+                }
+                else if (isupper(title[i])) title[i] = title[i] + 32;
+            }
+
+            for (i = 0; i < 5; i++) {
+                if (strcmp(title, book[i].Title) == 0) {
+                    if (strcmp(borrow[i], "borrowing") == 0) printf("\n대출 중이라 대출 할 수 없습니다.\n");
+                    else {
+                        printf("\n대출되었습니다.\n");
+                        strcpy(borrow[i], "borrowing");
+                    }
+                    break;
+                }
+            }
+            if (i == 5) printf("\n책을 보유하고 있지 않습니다.\n");
+        }
+
+        else if (strcmp(menu,"반납") == 0) {
+            printf("\n반납할 책의 이름을 선택하세요 : ");
+            scanf("%s", title);
+
+            for (i = 0; title[i] != '\0'; i++) {
+                if (i == 0) {
+                    if (islower(title[i])) title[i] = title[i] - 32;
+                }
+                else if (isupper(title[i])) title[i] = title[i] + 32;
+            }
+
+            for (i = 0; i < 5; i++) {
+                if (strcmp(title, book[i].Title) == 0) {
+                    if (strcmp(borrow[i], "borrowing") == 0) {
+                        printf("\n책이 반납되었습니다.\n");
+                        strcpy(borrow[i], "available");
+                    }
+                    else printf("\n대출되지 않은 책입니다.\n");
+                    break;
+                }
+            }
+            if (i == 5) printf("\n책을 보유하고 있지 않습니다.\n");
+        }
+
+        printf("\n\n");
+    } while (strcmp(menu, "종료") != 0);
+
+    return 0;
+}
